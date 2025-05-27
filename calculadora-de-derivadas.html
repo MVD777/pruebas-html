@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Derivadas</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.min.js"></script>
+</head>
+<body>
+    <h3>Calculadora de Derivadas</h3>
+    <p>Ingresa una función para obtener su derivada:</p>
+    <input type="text" id="functionInput" placeholder="Ejemplo: x^2 + sin(x)">
+    <button onclick="calculateDerivative()">Calcular Derivada</button>
+    <p>Resultado: <span id="result"></span></p>
+
+    <script>
+        function calculateDerivative() {
+            const input = document.getElementById('functionInput').value;
+            try {
+                // Deriva la función respecto a 'x'
+                const derivative = math.derivative(input, 'x').toString();
+                document.getElementById('result').innerText = derivative;
+            } catch (error) {
+                document.getElementById('result').innerText = "Error en la función ingresada.";
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Derivadas</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            margin-top: 50px; 
+            background-color: #f3e5ab; /* Color ocre claro */
+        }
+        h2 { color: #333; }
+        input, select, button { 
+            margin: 10px; 
+            padding: 10px; 
+            font-size: 1em; 
+        }
+        #resultLabel { 
+            font-weight: bold; 
+            color: #007BFF; 
+            font-size: 2em; /* Doble de altura */
+        }
+        #result { 
+            font-size: 2em; /* Mismo tamaño que "Resultado" */
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h2>Calculadora de Derivadas</h2>
+    <p>Ingresa una función para obtener su derivada:</p>
+    <input type="text" id="functionInput" placeholder="Ejemplo: x^2 + sin(x)">
+    <label for="variableSelect">Variable:</label>
+    <select id="variableSelect">
+        <option value="x">x</option>
+        <option value="y">y</option>
+        <option value="z">z</option>
+    </select>
+    <button onclick="calculateDerivative()">Calcular Derivada</button>
+    <button onclick="clearInput()">Borrar</button>
+    <p><span id="resultLabel">Resultado:</span> <span id="result"></span></p>
+
+    <script>
+        function calculateDerivative() {
+            const input = document.getElementById('functionInput').value;
+            const variable = document.getElementById('variableSelect').value;
+            try {
+                const derivative = math.derivative(input, variable).toString();
+                document.getElementById('result').innerText = derivative;
+                MathJax.typesetPromise(); // Renderiza el resultado en formato matemático
+            } catch (error) {
+                document.getElementById('result').innerText = "Error en la función ingresada.";
+            }
+        }
+
+        function clearInput() {
+            document.getElementById('functionInput').value = "";
+            document.getElementById('result').innerText = "";
+        }
+    </script>
+</body>
+</html>

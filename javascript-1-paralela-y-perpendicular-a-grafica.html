@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Funciones paralela y perpendicular</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+    }
+    label, input {
+      display: block;
+      margin: 0.5rem 0;
+    }
+    #resultado {
+      margin-top: 1rem;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      background-color: #f9f9f9;
+    }
+  </style>
+</head>
+<body>
+  <h1>Funciones paralela y perpendicular</h1>
+
+  <label for="funcion">Función lineal (formato: f(x) = ax + b o f(x) = ax):</label>
+  <input type="text" id="funcion" placeholder="Ejemplo: f(x) = 2x + 3 o f(x) = -4x">
+
+  <label for="x0">Coordenada x del punto:</label>
+  <input type="number" id="x0" placeholder="Ejemplo: 4">
+
+  <label for="y0">Coordenada y del punto:</label>
+  <input type="number" id="y0" placeholder="Ejemplo: 5">
+
+  <button onclick="calcular()">Calcular funciones</button>
+
+  <div id="resultado"></div>
+
+  <script>
+    function calcular() {
+      const expresion = document.getElementById("funcion").value.trim().replace(/\s+/g, '');
+      const x0 = parseFloat(document.getElementById("x0").value);
+      const y0 = parseFloat(document.getElementById("y0").value);
+
+      const regex = /^f\(x\)=([+-]?[\d.]*)x([+-][\d.]+)?$/i;
+      const match = expresion.match(regex);
+
+      if (!match) {
+        document.getElementById("resultado").innerText =
+          "❌ Expresión no válida. Usa el formato f(x) = ax + b o f(x) = ax";
+        return;
+      }
+
+      let aStr = match[1];
+      let bStr = match[2];
+
+      // Interpretar coeficiente de x (ahora "a")
+      let a;
+      if (aStr === '' || aStr === '+') {
+        a = 1;
+      } else if (aStr === '-') {
+        a = -1;
+      } else {
+        a = parseFloat(aStr);
+      }
+
+      // Interpretar término independiente
+      let b = bStr ? parseFloat(bStr) : 0;
+
+      // Función paralela
+      const bParalela = y0 - a * x0;
+      const exprParalela = `g(x) = ${a}x ${bParalela >= 0 ? '+ ' + bParalela : '- ' + Math.abs(bParalela)}`;
+
+      // Función perpendicular
+      const aPerpendicular = -1 / a;
+      const bPerpendicular = y0 - aPerpendicular * x0;
+      const exprPerpendicular = `h(x) = ${aPerpendicular}x ${bPerpendicular >= 0 ? '+ ' + bPerpendicular : '- ' + Math.abs(bPerpendicular)}`;
+
+      document.getElementById("resultado").innerHTML = `
+        <strong>Función g(x) paralela a f(x):</strong> ${exprParalela}<br>
+        <strong>Función h(x) perpendicular a f(x):</strong> ${exprPerpendicular}
+      `;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Derivadas</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.min.js"></script>
+</head>
+<body>
+    <h2>Calculadora de Derivadas</h2>
+    <p>Ingresa una función para obtener su derivada:</p>
+    <input type="text" id="functionInput" placeholder="Ejemplo: x^2 + sin(x) o (x^2+1)/(x+1)">
+    <button onclick="calculateDerivative()">Calcular Derivada</button>
+    <p>Resultado: <span id="result"></span></p>
+    <h3>Pasos seguidos:</h3>
+    <ul id="steps"></ul>
+
+    <script>
+        function calculateDerivative() {
+            const input = document.getElementById('functionInput').value;
+            const stepsList = document.getElementById('steps');
+            stepsList.innerHTML = ""; // Limpiar los pasos previos
+            try {
+                // Expresión inicial
+                const expression = math.parse(input);
+                stepsList.innerHTML += `<li>Función original: ${expression.toString()}</li>`;
+
+                // Mostrar en consola el tipo de nodo de la expresión para depurar
+                console.log("Tipo de expresión:", expression.type);
+
+                // Identificar si es una función racional (cociente)
+                if (expression.type === 'OperatorNode' && expression.op === '/') {
+                    const num = expression.args[0];  // Numerador
+                    const den = expression.args[1];  // Denominador
+
+                    // Derivada del numerador y denominador
+                    const numDerivative = math.derivative(num, 'x');
+                    const denDerivative = math.derivative(den, 'x');
+                    stepsList.innerHTML += `<li>Numerador: ${num.toString()}</li>`;
+                    stepsList.innerHTML += `<li>Denominador: ${den.toString()}</li>`;
+                    stepsList.innerHTML += `<li>Derivada del numerador: ${numDerivative.toString()}</li>`;
+                    stepsList.innerHTML += `<li>Derivada del denominador: ${denDerivative.toString()}</li>`;
+
+                    // Aplicar la regla del cociente
+                    const quotientRule = `(${numDerivative} * ${den} - ${num} * ${denDerivative}) / (${den}^2)`;
+                    stepsList.innerHTML += `<li>Aplicando la regla del cociente: (${numDerivative} * ${den} - ${num} * ${denDerivative}) / (${den}^2)</li>`;
+
+                    // Simplificación final
+                    const simplifiedDerivative = math.simplify(quotientRule);
+                    stepsList.innerHTML += `<li>Derivada simplificada: ${simplifiedDerivative.toString()}</li>`;
+
+                    document.getElementById('result').innerText = simplifiedDerivative.toString();
+
+                } else {
+                    // Derivación directa para funciones que no son cocientes
+                    const derivative = math.derivative(input, 'x').toString();
+                    stepsList.innerHTML += `<li>Derivada directa: ${derivative}</li>`;
+                    document.getElementById('result').innerText = derivative;
+                }
+            } catch (error) {
+                document.getElementById('result').innerText = "Error en la función ingresada.";
+                stepsList.innerHTML = "<li>Revisa el formato de la función ingresada.</li>";
+                console.error("Error al calcular la derivada:", error);
+            }
+        }
+    </script>
+</body>
+</html>
